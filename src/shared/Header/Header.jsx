@@ -1,8 +1,12 @@
+import React, { useContext } from 'react'
 import { Link } from "react-router-dom";
 
 import { Navbar, Nav } from "react-bootstrap";
+import { LoginContext } from "../../context/LoginProvider";
 
 const Header = () => {
+  const { logout, isLoggedIn } = useContext(LoginContext)
+
   return (
     <Navbar variant="light" bg="light" expand="lg">
       <Navbar.Brand href="#home">Hello!</Navbar.Brand>
@@ -15,9 +19,9 @@ const Header = () => {
           <Link to="/merchant-list" className="nav-link">
             Merchants
           </Link>
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
+          {!isLoggedIn
+          ? <Link to="/login" className="nav-link">Login</Link>
+          : <Link to="/" className="nav-link" onClick={logout}>Logout</Link>}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

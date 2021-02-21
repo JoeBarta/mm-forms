@@ -1,8 +1,32 @@
+import { useContext, useState } from "react";
+import { LoginContext } from "../../context/LoginProvider";
 import "./LoginPage.css";
 
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+
 const LoginPage = () => {
+  const { login, getAccounts } = useContext(LoginContext)
+  const [loginFailed, setLoginFailed] = useState(null)
+  const history = useHistory()
+
+  /**
+   * 'register' - makes your component/form and its values + submission available to the useForm hooks
+   */
+  const { register, handleSubmit, errors } = useForm();
+
+  const onSubmit = data => {
+    if (getAccounts[data.username] === data.password) {
+      login()
+      setLoginFailed(false)
+      history.push('/merchant-list')
+    } else {
+      setLoginFailed(true)
+    }
+  }
+
   return (
-    <form className="form-signin">
+    <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
       <img
         alt=""
         className="mb-4"
@@ -16,19 +40,24 @@ const LoginPage = () => {
         Username
       </label>
       <input
-        className="form-control"
+        className={`form-control ${errors.username ? 'is-invalid' : ''}`}
         id="inputUsername"
         placeholder="Username"
         type="text"
+        ref={register({ required: true })}
+        name='username'
       />
+  
       <label className="sr-only" htmlFor="inputPassword">
         Password
       </label>
       <input
-        className="form-control"
+        className={`form-control ${errors.password ? 'is-invalid' : ''}`}
         id="inputPassword"
         placeholder="Password"
         type="password"
+        name='password'
+        ref={register({ required: true })}
       />
 
       <div className="checkbox mb-3">
@@ -39,7 +68,7 @@ const LoginPage = () => {
       <button className="btn btn-lg btn-primary btn-block" type="submit">
         Sign in
       </button>
-
+      {loginFailed ? <div>Incorrect username or password</div> : null}
       <p className="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
     </form>
   );

@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import DataSearchList from "../../shared/components/DataSearchList";
+import DataSearchList from "../../shared/components/DataSearchList/DataSearchList";
 
 import { data } from "./data.json";
 
